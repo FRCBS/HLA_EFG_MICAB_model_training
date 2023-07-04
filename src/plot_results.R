@@ -566,5 +566,3 @@ ggsave(accuracy_delta, file='./results/Plots/Manuscript/Supplementary/SF_4_overa
 #min(comb.overall.list$delta)
 #mean(comb.overall.list$delta)
 #comb.overall.list %>% filter(Gene == "MICA") %>% summarize_at("delta", mean)
-
-
