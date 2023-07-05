@@ -28,27 +28,27 @@ models_hlae <- load_models(model_files_hlae, "HLA_E")
 models_hlaf <- load_models(model_files_hlaf, "HLA_F")
 
 # change the order of MICA, MICB, HLA-E and HLA-F models to correspond i - vii
-models_mica <- models_mica[c("model_MICA_geno_BB_micatab$training.RData","model_MICA_geno_BB_shared_micatab$training.RData", 
-                             "model_MICA_geno_1000G_shared_EUR_iii_mica.RData", "model_MICA_geno_comb_1000G_BB_mica_iv.RData",
-                             "model_MICA_geno_1000G_shared_mica_1000G_divide$training.RData", "model_MICA_geno_comb_1000G_BB_mica_vi.RData",
+models_mica <- models_mica[c("model_MICA_geno_FIN_I_micatab$training.RData","model_MICA_geno_comb_1000G_I_micatab$training.RData", 
+                             "model_MICA_geno_comb_1000G_I_EUR_iii_mica.RData", "model_MICA_geno_comb_1000G_I_mica_iv.RData",
+                             "model_MICA_geno_comb_1000G_I_mica_1000G_divide$training.RData", "model_MICA_geno_comb_1000G_I_mica_vi.RData",
                              "model_MICA_Genotypedata_1000G_mica_1000G_divide$training.RData")]
-models_micb <- models_micb[c("model_MICB_geno_BB_micbtab$training.RData","model_MICB_geno_BB_shared_micbtab$training.RData", 
-                             "model_MICB_geno_1000G_shared_EUR_iii_micb.RData", "model_MICB_geno_comb_1000G_BB_micb_iv.RData",
-                             "model_MICB_geno_1000G_shared_micb_1000G_divide$training.RData", "model_MICB_geno_comb_1000G_BB_micb_vi.RData",
+models_micb <- models_micb[c("model_MICB_geno_FIN_I_micbtab$training.RData","model_MICB_geno_comb_1000G_I_micbtab$training.RData", 
+                             "model_MICB_geno_comb_1000G_I_EUR_iii_micb.RData", "model_MICB_geno_comb_1000G_I_micb_iv.RData",
+                             "model_MICB_geno_comb_1000G_I_micb_1000G_divide$training.RData", "model_MICB_geno_comb_1000G_I_micb_vi.RData",
                              "model_MICB_Genotypedata_1000G_micb_1000G_divide$training.RData")]
-models_hlae <- models_hlae[c("model_E_geno_BB_hlaetab$training.RData","model_E_geno_BB_shared_hlaetab$training.RData", 
-                             "model_E_geno_1000G_shared_EUR_iii_e.RData", "model_E_geno_comb_1000G_BB_hlae_iv.RData",
-                             "model_E_geno_1000G_shared_hlae_1000G_divide$training.RData", "model_E_geno_comb_1000G_BB_hlae_vi.RData",
+models_hlae <- models_hlae[c("model_E_geno_FIN_I_hlaetab$training.RData","model_E_geno_comb_1000G_I_hlaetab$training.RData", 
+                             "model_E_geno_comb_1000G_I_EUR_iii_e.RData", "model_E_geno_comb_1000G_I_hlae_iv.RData",
+                             "model_E_geno_comb_1000G_I_hlae_1000G_divide$training.RData", "model_E_geno_comb_1000G_I_hlae_vi.RData",
                              "model_E_Genotypedata_1000G_hlae_1000G_divide$training.RData")]
-models_hlaf <- models_hlaf[c("model_F_geno_HSCT_hlaftab$training.RData","model_F_geno_HSCT_shared_hlaftab$training.RData", 
-                             "model_F_geno_1000G_shared_HSCT_EUR_iii_f.RData", "model_F_geno_comb_1000G_HSCT_hlaf_iv.RData",
-                             "model_F_geno_1000G_shared_HSCT_hlaf_1000G_divide$training.RData", "model_F_geno_comb_1000G_HSCT_hlaf_vi.RData",
+models_hlaf <- models_hlaf[c("model_F_geno_FIN_II_hlaftab$training.RData","model_F_geno_comb_1000G_II_hlaftab$training.RData", 
+                             "model_F_geno_comb_1000G_II_HSCT_EUR_iii_f.RData", "model_F_geno_comb_1000G_II_hlaf_iv.RData",
+                             "model_F_geno_comb_1000G_II_hlaf_1000G_divide$training.RData", "model_F_geno_comb_1000G_II_hlaf_vi.RData",
                              "model_F_Genotypedata_1000G_hlaf_1000G_divide$training.RData")]
 
 # load HLA-G models (created in Model_training.R)
-model_hlag <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_BB_hlagtab$training.RData")))
-model_hlag_3utr <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_BB_hlag3UTRtab$training.RData")))
-model_hlag_5utr <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_BB_hlag5UTRtab$training.RData")))
+model_hlag <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_FIN_I_hlagtab$training.RData")))
+model_hlag_3utr <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_FIN_I_hlag3UTRtab$training.RData")))
+model_hlag_5utr <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_FIN_I_hlag5UTRtab$training.RData")))
 
 ### ............................................................................................................................................... ###
 
@@ -81,16 +81,16 @@ Genotypedata_1000G$assembly <- 'hg38'
 #               IMPUTE FIN AND 1000G TEST SETS USING MODELS I - VII
 
 
-# impute FIN reference test samples using all models I - VII
+## impute FIN reference test samples using all models I - VII
 pred_FIN_mica <- pred_FIN(models_mica, geno_FIN_I, micatab$validation)
 pred_FIN_micb <- pred_FIN(models_micb, geno_FIN_I, micbtab$validation)
 pred_FIN_hlae <- pred_FIN(models_hlae, geno_FIN_I, hlaetab$validation)
 pred_FIN_hlaf <- pred_FIN(models_hlaf, geno_FIN_II, hlaftab$validation)
 
-# impute 1000G superpopulation (EUR, AFR, EAS, SAS, AMR) test sets
+## impute 1000G superpopulation (EUR, AFR, EAS, SAS, AMR) test sets
 
 # list superpopulation test sets
-val_superpop_mica <- list(EUR_mica, AFR_mica, EAS_mica, SAS_mica, AMR_mica) # from Model_training.R
+val_superpop_mica <- list(EUR_mica, AFR_mica, EAS_mica, SAS_mica, AMR_mica) # phenotype sets from Model_training.R
 val_superpop_micb <- list(EUR_micb, AFR_micb, EAS_micb, SAS_micb, AMR_micb)
 val_superpop_hlae <- list(EUR_e, AFR_e, EAS_e, SAS_e, AMR_e)
 val_superpop_hlaf <- list(EUR_f, AFR_f, EAS_f, SAS_f, AMR_f)
@@ -101,7 +101,7 @@ pred_1000G_micb <- pred_1000G_superpop(models_micb, val_superpop_micb)
 pred_1000G_hlae <- pred_1000G_superpop(models_hlae, val_superpop_hlae)
 pred_1000G_hlaf <- pred_1000G_superpop(models_hlaf, val_superpop_hlaf)
 
-# combine FIN and 1000G results into same list, seems to be working
+# combine FIN and 1000G results into same list
 pred_1000G_FIN_mica <- lapply(1:length(pred_1000G_mica),function(i) append(pred_1000G_mica[[i]],pred_FIN_mica[i]))
 pred_1000G_FIN_micb <- lapply(1:length(pred_1000G_micb),function(i) append(pred_1000G_micb[[i]],pred_FIN_micb[i]))
 pred_1000G_FIN_hlae <- lapply(1:length(pred_1000G_hlae),function(i) append(pred_1000G_hlae[[i]],pred_FIN_hlae[i]))

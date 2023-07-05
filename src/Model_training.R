@@ -1,6 +1,6 @@
 ### ................................................................................................................................................ ###
 
-### fit HIBAG models for MICA, MICB, HLA-E, HLA-F and HLA-G in different reference data combinations (i - vii)
+### fit HIBAG models for MICA, MICB, HLA-E, HLA-F and HLA-G in different reference data combinations (I - VII)
 
 ### ................................................................................................................................................ ###
 
@@ -38,7 +38,7 @@ source('./src/FINALS/functions.R')
 
 geno_FIN_I <- hlaBED2Geno(bed.fn = "data/Genotype_data/MHC_selected_samples_MICAB.bed", 
                        fam.fn = "data/Genotype_data/MHC_selected_samples_MICAB.fam", 
-                       bim.fn = "data/Genotype_data/MHC_selected_samples_MICAB.bim", assembly="hg38") # used for model I (HLA-E, -F, MICA and MICB)
+                       bim.fn = "data/Genotype_data/MHC_selected_samples_MICAB.bim", assembly="hg38") # used for model I (MICA, MICB, HLA-E)
 geno_FIN_II <- hlaBED2Geno(bed.fn = "data/Genotype_data/MHCmergedunion_donors_hg38.bed", 
                          fam.fn = "data/Genotype_data/MHCmergedunion_donors_hg38.fam", 
                          bim.fn = "data/Genotype_data/MHCmergedunion_donors_hg38.bim", assembly="hg38") # used for model I (HLA-F)
@@ -60,22 +60,8 @@ Genotypedata_1000G$snp.position <- hg38_converted_1000G_rem_dup_snps$mapped_star
 Genotypedata_1000G$assembly <- 'hg38'
 
 # Combine Finnish I or II with 1000G genotype data by SNP position
-geno_comb_1000G_I <-hlaGenoCombine(Genotypedata_1000G, geno_FIN_I, match.type="Position") # used for models IV and VI
-geno_comb_1000G_II <-hlaGenoCombine(Genotypedata_1000G, geno_FIN_II, match.type="Position") # used for models IV and VI
-
-# extract shared SNPs from Finnish reference data and 1000G data
-intersect_FIN_I_comb <- intersect(geno_FIN_I$snp.position, geno_comb_1000G_FIN_I$snp.position)
-geno_FIN_I_shared <- hlaGenoSubset(geno_FIN_I, snp.sel= geno_FIN_I$snp.position %in% intersect_FIN_I_comb) # used for model II (HLA-E, -F, MICA, MICB)
-
-intersect_FIN_II_comb <- intersect(geno_FIN_II$snp.position, geno_comb_1000G_FIN_II$snp.position)
-geno_FIN_II_shared <- hlaGenoSubset(geno_FIN_II, snp.sel= geno_FIN_II$snp.position %in% intersect_FIN_II_comb) # used for model II (HLA-F)
-
-intersect_1000G_comb_FIN_I <- intersect(Genotypedata_1000G$snp.position, geno_comb_1000G_FIN_I$snp.position)
-geno_1000G_shared <- hlaGenoSubset(Genotypedata_1000G, snp.sel= Genotypedata_1000G$snp.position %in% intersect_1000G_comb_FIN_I) # used for models III and V (HLA-E, -F, MICA, MICB)
-
-intersect_1000G_comb_FIN_II <- intersect(Genotypedata_1000G$snp.position, geno_comb_1000G_HSCT$snp.position)
-geno_1000G_shared_FIN_II <- hlaGenoSubset(Genotypedata_1000G, snp.sel= Genotypedata_1000G$snp.position %in% intersect_1000G_comb_FIN_II) # used for models III and V (HLA-F)
-
+geno_comb_1000G_I <-hlaGenoCombine(Genotypedata_1000G, geno_FIN_I, match.type="Position") # used for models II-VI (MICA, MICB, HLA-E)
+geno_comb_1000G_II <-hlaGenoCombine(Genotypedata_1000G, geno_FIN_II, match.type="Position") # used for models II-VI (HLA-F)
 
 ## PHENOTYPE data 1000G
 
@@ -111,34 +97,20 @@ hlae_1000G_divide <- hlaSplitAllele(hlae_1000G, train.prop=0.666)
 set.seed(100)
 hlaf_1000G_divide <- hlaSplitAllele(hlaf_1000G, train.prop=0.666)
 
-# check that alleles are evenly divided between sets
-hlaUniqueAllele(mica_1000G_divide$training)
-hlaUniqueAllele(mica_1000G_divide$validation)
-hlaUniqueAllele(micb_1000G_divide$training)
-hlaUniqueAllele(micb_1000G_divide$validation)
-hlaUniqueAllele(hlae_1000G_divide$training)
-hlaUniqueAllele(hlae_1000G_divide$validation)
-hlaUniqueAllele(hlaf_1000G_divide$training)
-hlaUniqueAllele(hlaf_1000G_divide$validation)
-
 # subset superpopulation validation samples 
 EUR_id_mica <- filter(pheno_1000G_MICA_intersect, Superpopulation_code == "EUR")
 EUR_mica <- hlaAlleleSubset(mica_1000G_divide$validation, samp.sel=mica_1000G_divide$validation$value$sample.id %in% EUR_id_mica$Sample_ID)
-#EUR_test_geno_mica <- hlaGenoSubset(Genotypedata_1000G, samp.sel = match(EUR_mica$value$sample.id, Genotypedata_1000G$sample.id))
 
 EUR_id_micb <- filter(pheno_1000G_MICB_intersect, Superpopulation_code == "EUR")
 EUR_micb <- hlaAlleleSubset(micb_1000G_divide$validation, samp.sel=micb_1000G_divide$validation$value$sample.id %in% EUR_id_micb$Sample_ID)
-#EUR_test_geno_micb <- hlaGenoSubset(Genotypedata_1000G, samp.sel = match(EUR_micb$value$sample.id, Genotypedata_1000G$sample.id))
 
 EUR_id_e <- filter(pheno_1000G_E_intersect, Superpopulation_code == "EUR")
 EUR_e <- hlaAlleleSubset(hlae_1000G_divide$validation, samp.sel=hlae_1000G_divide$validation$value$sample.id %in% EUR_id_e$Sample_ID)
-#EUR_test_geno_e <- hlaGenoSubset(Genotypedata_1000G, samp.sel = match(EUR_e$value$sample.id, Genotypedata_1000G$sample.id))
 
 EUR_id_f <- filter(pheno_1000G_F_intersect, Superpopulation_code == "EUR")
 EUR_f <- hlaAlleleSubset(hlaf_1000G_divide$validation, samp.sel=hlaf_1000G_divide$validation$value$sample.id %in% EUR_id_f$Sample_ID)
-#EUR_test_geno_f <- hlaGenoSubset(Genotypedata_1000G, samp.sel = match(EUR_f$value$sample.id, Genotypedata_1000G$sample.id))
 
-# repeat same for all superpopulations (EUR, AFR, EAS, SAS, AMR)
+# repeat same for AFR, EAS, SAS, AMR
 
 
 ## PHENOTYPE data Finnish reference (FIN_I and FIN_II)
@@ -195,22 +167,6 @@ micatab$validation<- hlaCombineAllele(micatab$validation, mica_FIN_I_rare)
 micbtab$validation<- hlaCombineAllele(micbtab$validation, micb_FIN_I_rare)
 hlagtab$validation<- hlaCombineAllele(hlagtab$validation, hla_G_FIN_I_rare)
 
-# check that rare alleles are evenly divided between sets
-hlaUniqueAllele(micatab$training)
-hlaUniqueAllele(micatab$validation)
-hlaUniqueAllele(micbtab$training)
-hlaUniqueAllele(micbtab$validation)
-hlaUniqueAllele(hlaetab$training)
-hlaUniqueAllele(hlaetab$validation)
-hlaUniqueAllele(hlaftab$training)
-hlaUniqueAllele(hlaftab$validation)
-hlaUniqueAllele(hlagtab$training)
-hlaUniqueAllele(hlagtab$validation)
-hlaUniqueAllele(hlag5UTRtab$training)
-hlaUniqueAllele(hlag5UTRtab$validation)
-hlaUniqueAllele(hlag3UTRtab$training)
-hlaUniqueAllele(hlag3UTRtab$validation)
-
 ### ................................................................................................................................................ ###
 
 # phenotype sets for training
@@ -245,12 +201,14 @@ hlaf_vi <- hlaCombineAllele(hlaf_1000G_divide$training, hlaftab$training)
 ### ................................................................................................................................................ ###
 
 # mica
-# loop to fit models with different flanking regions in FIN and 1000G data
-loop_model_FIN_I_mica <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICA', micatab$training, geno_BB, x, 50))
+# loop to fit models with different flanking regions in FIN, 1000G and combined FIN+1000G data
+loop_model_FIN_I_mica <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICA', micatab$training, geno_FIN_I, x, 50))
 loop_model_1000G_mica <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICA', mica_1000G_divide$training, Genotypedata_1000G, x, 50))
+loop_model_FIN_1000G_mica <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICA', mica_vi, geno_comb_1000G_I, x, 50))
 
 loop_model_FIN_I_mica_out <- map_dfr(1:length(loop_model_FIN_I_mica), function(x) summary(loop_model_FIN_I_mica[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
 loop_model_1000G_mica_out <- map_dfr(1:length(loop_model_1000G_mica), function(x) summary(loop_model_1000G_mica[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
+loop_model_FIN_1000G_mica_out <- map_dfr(1:length(loop_model_FIN_1000G_mica), function(x) summary(loop_model_FIN_1000G_mica[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
 
 # pred results  
 loop_results_model_FIN_I_mica <- map(1:length(loop_model_FIN_I_mica), function (x) {
@@ -261,72 +219,16 @@ loop_results_model_1000G_mica <- map(1:length(loop_model_1000G_mica), function (
   PredHlaModel(loop_model_1000G_mica[[x]], Genotypedata_1000G, mica_1000G_divide$validation)
 })
 
+loop_results_model_FIN_1000G_mica <- map(1:length(loop_model_FIN_1000G_mica), function (x) {
+  PredHlaModel(loop_model_FIN_1000G_mica[[x]], geno_comb_1000G_I, mica_vi)
+})
+
 # get overall accuracies from the loop´
 results_FIN_I_loop_mica <- accuracy_loop(loop_results_model_FIN_I_mica, 1)
 results_1000G_loop_mica <- accuracy_loop(loop_results_model_1000G_mica, 1)
+results_FIN_1000G_loop_mica <- accuracy_loop(loop_results_model_FIN_1000G_mica, 1)
 
-# micb
-# loop to fit models with different flanking regions in FIN and 1000G data
-loop_model_FIN_I_micb <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICB', micbtab$training, geno_FIN_I, x, 50))
-loop_model_1000G_micb <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('MICB', micb_1000G_divide$training, Genotypedata_1000G, x, 50))
-
-loop_model_FIN_I_micb_out <- map_dfr(1:length(loop_model_FIN_I_micb), function(x) summary(loop_model_FIN_I_micb[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-loop_model_1000G_micb_out <- map_dfr(1:length(loop_model_1000G_micb), function(x) summary(loop_model_1000G_micb[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-
-# pred results 
-loop_results_model_FIN_I_micb <- map(1:length(loop_model_FIN_I_micb), function (x) {
-  PredHlaModel(loop_model_FIN_I_micb[[x]], geno_FIN_I, micbtab$validation)
-})
-
-loop_results_model_1000G_micb <- map(1:length(loop_model_1000G_micb), function (x) {
-  PredHlaModel(loop_model_1000G_micb[[x]], Genotypedata_1000G, micb_1000G_divide$validation)
-})
-
-# get overall accuracies from the loop
-results_FIN_I_loop_micb <- accuracy_loop(loop_results_model_FIN_I_micb, 1)
-results_1000G_loop_micb <- accuracy_loop(loop_results_model_1000G_micb, 1)
-
-# HLA-E
-# loop to fit models with different flanking regions in FIN and 1000G data
-loop_model_FIN_I_hlae <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('E', hlaetab$training, geno_FIN_I, x, 50))
-loop_model_1000G_hlae <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('E', hlae_1000G_divide$training, Genotypedata_1000G, x, 50))
-
-loop_model_FIN_I_hlae_out <- map_dfr(1:length(loop_model_FIN_I_hlae), function(x) summary(loop_model_FIN_I_hlae[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-loop_model_1000G_hlae_out <- map_dfr(1:length(loop_model_1000G_hlae), function(x) summary(loop_model_1000G_hlae[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-
-# pred results
-loop_results_model_FIN_I_hlae <- map(1:length(loop_model_FIN_I_hlae), function (x) {
-  PredHlaModel(loop_model_FIN_I_hlae[[x]], geno_FIN_I, hlaetab$validation)
-})
-
-loop_results_model_1000G_hlae <- map(1:length(loop_model_1000G_hlae), function (x) {
-  PredHlaModel(loop_model_1000G_hlae[[x]], Genotypedata_1000G, hlae_1000G_divide$validation)
-})
-
-# get overall accuracies from the loop
-results_FIN_I_loop_hlae <- accuracy_loop(loop_results_model_FIN_I_hlae, 1)
-results_1000G_loop_hlae <- accuracy_loop(loop_results_model_1000G_hlae, 1)
-
-# HLA-F
-# loop to fit models with different flanking regions in FIN and 1000G data
-loop_model_FIN_II_hlaf <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('F', hlaftab$training, geno_FIN_II, x, 50))
-loop_model_1000G_hlaf <- map(c(seq(1000, 15000, by=2000), 50000), function(x) fitHLAmodel('F', hlaf_1000G_divide$training, Genotypedata_1000G, x, 50))
-
-loop_model_FIN_II_hlaf_out <- map_dfr(1:length(loop_model_FIN_II_hlaf), function(x) summary(loop_model_FIN_II_hlaf[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-loop_model_1000G_hlaf_out <- map_dfr(1:length(loop_model_1000G_hlaf), function(x) summary(loop_model_1000G_hlaf[[x]]) %>% .$info %>% .[3, ]) # out of bag accuracies
-
-# pred results
-loop_results_model_FIN_II_hlaf <- map(1:length(loop_model_FIN_II_hlaf), function (x) {
-  PredHlaModel(loop_model_FIN_II_hlaf[[x]], geno_FIN_II, hlaftab$validation)
-})
-
-loop_results_model_1000G_hlaf <- map(1:length(loop_model_1000G_hlaf), function (x) {
-  PredHlaModel(loop_model_1000G_hlaf[[x]], Genotypedata_1000G, hlaf_1000G_divide$validation)
-})
-
-# get overall accuracies from the loop
-results_FIN_II_loop_hlaf <- accuracy_loop(loop_results_model_FIN_II_hlaf, 1)
-results_1000G_loop_hlaf <- accuracy_loop(loop_results_model_1000G_hlaf, 1)
+# repeat same for MICB, HLA-E, HLA-F
 
 # HLA-G
 # loop to fit models with different flanking regions in FIN data
@@ -349,19 +251,21 @@ results_FIN_I_loop_hlag <- accuracy_loop(loop_results_model_FIN_I_hlag, 1)
 
 # train models with different data combinations, using training sets, 100 classifiers and 10 kb flanking region
 # (I) FIN (no intersect)
-fitHLAmodel("MICA", micatab$training, geno_FIN_I, 10000, 100) # MICA,MICB,HLA-E, HLA-G: geno_FIN_I, HLA-F: geno_FIN_II
+fitHLAmodel("MICA", micatab$training, geno_FIN_I, 10000, 100) # HLA-F: geno_FIN_II
 # (II) FIN
-fitHLAmodel("MICA", micatab$training, geno_FIN_I_shared, 10000, 100) # MICA,MICB,HLA-E: geno_FIN_I, HLA-F: geno_FIN_II_shared
+fitHLAmodel("MICA", micatab$training, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (III) EUR
-fitHLAmodel("MICA", EUR_iii_mica, geno_1000G_shared, 10000, 100) # MICA, MICB, HLA-E: geno_1000G_shared, HLA-F: geno_1000G_shared_FIN_II
+fitHLAmodel("MICA", EUR_iii_mica, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (IV) EUR + FIN
-fitHLAmodel("MICA", mica_iv, geno_comb_1000G_FIN_I, 10000, 100) # MICA, MICB, HLA-E: geno_comb_1000G_FIN_I, HLA-F: geno_comb_1000G_FIN_II
+fitHLAmodel("MICA", mica_iv, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (V) 1000G all
-fitHLAmodel("MICA", mica_1000G_divide$training, geno_1000G_shared, 10000, 100) # MICA, MICB, HLA-E: geno_1000G_shared, HLA-F: geno_1000G_shared_FIN_II
+fitHLAmodel("MICA", mica_1000G_divide$training, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (VI) 1000G all + FIN
-fitHLAmodel("MICA", mica_vi, geno_comb_1000G_FIN_I, 10000, 100) # MICA, MICB, HLA-E: geno_comb_1000G_FIN_I, HLA-F: geno_comb_1000G_FIN_II 
+fitHLAmodel("MICA", mica_vi, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (VII) 1000G all (no intersect)
 fitHLAmodel("MICA", mica_1000G_divide$training, Genotypedata_1000G, 10000, 100) 
+
+# repeat for MICB, HLA-E and HLA-F
 
 # HLA-G (training only with FIN I reference)
 fitHLAmodel("G", hlagtab$training, geno_FIN_I, 10000,100)
@@ -400,19 +304,21 @@ f_vi_all <- hlaCombineAllele(hlaf_1000G, HLA_F_FIN_II)
 
 # train models with different data combinations, using whole data sets, 100 classifiers and 10 kb flanking region
 # (I) FIN (no intersect)
-fitHLAmodel("MICA", mica_FIN_I, geno_FIN_I, 10000, 100) # MICA,MICB,HLA-E: geno_FIN_I, HLA-F: geno_FIN_II
+fitHLAmodel("MICA", mica_FIN_I, geno_FIN_I, 10000, 100) # HLA-F: geno_FIN_II
 # (II) FIN
-fitHLAmodel("MICA", mica_FIN_I, geno_FIN_I_shared, 10000, 100) # MICA,MICB,HLA-E: geno_FIN_I, HLA-F: geno_FIN_II_shared
+fitHLAmodel("MICA", mica_FIN_I, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (III) EUR
-fitHLAmodel("MICA", EUR_mica_all, geno_1000G_shared, 10000, 100) # MICA, MICB, HLA-E: geno_1000G_shared, HLA-F: geno_1000G_shared_FIN_II
+fitHLAmodel("MICA", EUR_mica_all, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (IV) EUR + FIN
-fitHLAmodel("MICA", mica_iv_all, geno_comb_1000G_FIN_I, 10000, 100) # MICA, MICB, HLA-E: geno_comb_1000G_FIN_I, HLA-F: geno_comb_1000G_FIN_II
+fitHLAmodel("MICA", mica_iv_all, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (V) 1000G all
-fitHLAmodel("MICA", mica_1000G, geno_1000G_shared, 10000, 100) # MICA, MICB, HLA-E: geno_1000G_shared, HLA-F: geno_1000G_shared_FIN_II
+fitHLAmodel("MICA", mica_1000G, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II
 # (VI) 1000G all + FIN
-fitHLAmodel("MICA", mica_vi_all, geno_comb_1000G_FIN_I, 10000, 100) # MICA, MICB, HLA-E: geno_comb_1000G_FIN_I, HLA-F: geno_comb_1000G_FIN_II 
+fitHLAmodel("MICA", mica_vi_all, geno_comb_1000G_I, 10000, 100) # HLA-F: geno_comb_1000G_II 
 # (VII) 1000G all (no intersect)
 fitHLAmodel("MICA", mica_1000G, Genotypedata_1000G, 10000, 100) 
+
+# repeat for MICB, HLA-E and HLA-F
 
 # HLA-G (training only with FIN I reference) 
 fitHLAmodel("G", HLA_G_FIN_I, geno_FIN_I, 10000,100)

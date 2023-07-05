@@ -60,7 +60,27 @@ confusion_processing <- function(x) {
   return(x)
 }
 
-# function v3 for confusion matrix plotting 
+# function for confusion matrix plotting (supplementary confusion matrices)
+# input is a processed confusion data
+
+conf_table_plot <- function(x, title=NA) {
+  ggplot(x, aes(x = name, y = rowname, fill = goodbad)) +
+    geom_tile(show.legend = FALSE, color="black") + 
+    theme(axis.text.x = element_text(angle = 90)) +
+    geom_text(aes(label=value), 
+              color= ifelse(x$goodbad=="absent", "white", "black"), 
+              position = position_dodge(width=0), 
+              size=3.5, 
+              hjust=0.7, 
+              vjust=0.5) +
+    scale_fill_manual(values = c(good = "green", bad = "red", absent="white")) +
+    xlab("True") +
+    ylab("Predicted") +
+    ggtitle(title) %>% return
+}
+
+# function v3 for confusion matrix plotting (Figure 3 & 5 confusion matrices)
+# input is a processed confusion data
 
 conf_table_plot_3 <- function(x, title=NA) {
   ggplot(x, aes(x = name, y = rowname, fill = goodbad)) +
