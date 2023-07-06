@@ -105,24 +105,28 @@ conf_table_plot_3 <- function(x, title=NA) {
 
 # function for plotting allelic results (accuracy, sensitivity, specificity etc)
 
-plot_allele_prop <- function(results, parameter, ytitle) { 
+plot_allele_prop <- function(results, parameter, ytitle, xtitle) { 
   gene.names <- c("MICA", "MICB", "HLA-E", "HLA-F")
   names(gene.names) <- c("MICA", "MICB", "HLA_E", "HLA_F")
   ggplot(results, aes(x= train.freq, y={{parameter}})) +
-    geom_point(aes(shape=factor(Pop, levels=c("FIN", "EUR", "AFR", "EAS", "SAS", "AMR")), colour=factor(Ref, levels=c("FIN", "1000G", "combined")), stroke=1), 
-               size = 3.5, alpha = 0.7, show.legend = T) +
-    xlab("Frequency") + ylab(ytitle) +
-    facet_wrap(vars(factor(Gene, levels=c("MICA", "MICB", "HLA_E", "HLA_F"))), labeller = as_labeller(gene.names)) +
+    geom_point(aes(shape=factor(Pop, levels=c("FIN", "EUR", "AFR", "EAS", "SAS", "AMR")), 
+                   colour=factor(Ref, levels=c("FIN", "1000G", "combined")), stroke=1), 
+               size = 3.7, alpha = 0.8, show.legend = T) +
+    xlab(xtitle) + ylab(ytitle) +
+    facet_wrap(vars(factor(Gene, levels=c("MICA", "MICB", "HLA_E", "HLA_F"))), 
+               ncol = 1,
+               labeller = as_labeller(gene.names)) +
     labs(shape = 'Population') +
     scale_shape_manual(values=c(0,1,2,4,5,6)) +
-    scale_color_manual(values=c('#046C9A','#FF0000','#F2AD00'), name = 'Reference') +
+    scale_color_manual(values=c('#046C9A','#FF0000','#FDD262'), name = 'Reference') +
     theme_classic() +
-    theme(axis.text.x = element_text(size = 18, angle = 33, vjust = 0.5), 
+    theme(axis.text.x = element_text(size = 18, angle = 0, vjust = 0.5), 
           axis.text.y = element_text(size=18), axis.title=element_text(size=18)) +
     theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size=18), axis.title=element_text(size=18)) +
     theme(strip.text.x = element_text(size = 24)) +
     theme(legend.title = element_text(size=24), legend.text = element_text(size=18)) +
-    theme(panel.background=element_rect(fill='white', colour='black'),strip.background=element_rect(fill='white', colour='white')) +
+    theme(panel.background=element_rect(fill='white', colour='black'),
+          strip.background=element_rect(fill='white', colour='white')) +
     theme(plot.title = element_text(size = 22, hjust = 0, face = 'bold')) +
     theme(legend.position = "top") +
     guides(shape = guide_legend(override.aes = list(stroke = 1)))

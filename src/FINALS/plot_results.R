@@ -146,7 +146,8 @@ ggsave(confusion_plot, file="results/Plots/Manuscript/Figure_3_confusion_vi.jpeg
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
 
 # read in data
-dat.nonnull <- list.files('data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G', 'compare$', full.names = T) %>% map(readRDS)
+dat.nonnull <- list.files('data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G', 'compare$', full.names = T) %>% 
+  map(readRDS)
 names(dat.nonnull) <- list.files('data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G', 'compare$') %>% 
   gsub('_all_models_1000G_BB_pred_compare', '', .)
 
@@ -161,7 +162,8 @@ for (gene in gene.names) {
   for (model in model.names.pick) {
     for (pop in pop.names) {
       dat.detail <-dat.nonnull[[gene]][[model]][[pop]]$detail %>% 
-      mutate(Pop=pop) %>% mutate(Gene=gene) %>% mutate(Ref= ifelse(model=='ii', 'FIN', ifelse(model=='v', '1000G', 'combined')))
+      mutate(Pop=pop) %>% mutate(Gene=gene) %>% mutate(Ref= ifelse(model=='ii', 'FIN', 
+                                                                   ifelse(model=='v', '1000G', 'combined')))
       dat.temp[[length(dat.temp)+1]] <- dat.detail
     }
   }
@@ -171,17 +173,21 @@ for (gene in gene.names) {
 detail.list <-do.call("rbind", dat.temp)
 
 # plot accuracy, sensitivity, specificity vs. allele frequency
-allele_accuracy_all <- plot_allele_prop(detail.list, accuracy, 'Accuracy')
-allele_sens_all     <- plot_allele_prop(detail.list, sensitivity, 'Sensitivity')
-allele_spec_all     <- plot_allele_prop(detail.list, specificity, 'Specificity')
+allele_accuracy_all <- plot_allele_prop(detail.list, accuracy, 'Accuracy' ,'')
+allele_sens_all     <- plot_allele_prop(detail.list, sensitivity, 'Sensitivity', 'Allele frequency')
+allele_spec_all     <- plot_allele_prop(detail.list, specificity, 'Specificity', '')
 
 
-allele_freq_all <- (allele_accuracy_all + allele_sens_all + allele_spec_all) + 
-  plot_layout(guides = "collect") & theme(legend.position = "top", 
-                                          legend.box = 'horizontal', legend.box.just = 'left', 
-                                          legend.margin = margin(1, 35, 20, 35)) 
+allele_freq_all <- (allele_accuracy_all + plot_spacer() +
+                      allele_sens_all +  plot_spacer() +
+                      allele_spec_all) + 
+  plot_layout(guides = "collect", widths = c(1, .15, 1, .15, 1)) & 
+  theme(legend.position = "top", 
+        legend.box = 'horizontal', legend.box.just = 'left', 
+        legend.margin = margin(1, 35, 20, 35)) 
 
-ggsave(allele_freq_all, file='./results/Plots/Manuscript/Figure_4_allelefreq_vs_acc_sens_spec.jpeg', height = 8, width = 18)
+ggsave(allele_freq_all, file='./results/Plots/Manuscript/Figure_4_allelefreq_vs_acc_sens_spec.jpeg', 
+       height = 14, width = 18)
 
 
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
