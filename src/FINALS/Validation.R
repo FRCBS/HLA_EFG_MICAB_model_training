@@ -67,12 +67,13 @@ geno_FIN_II$sample.id <- str_split_fixed(geno_FIN_II$sample.id, '-', 2)[, 1]
 
 # Load 1000G plink genotype data and convert positions hg37 -> hg38
 
-Genotypedata_1000G <- hlaBED2Geno(bed.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.bed", 
-                                  fam.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.fam", 
-                                  bim.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.bim", assembly="hg19")
-hg38_converted_1000G_rem_dup_snps <- read.table("./data/Tienari/report_1000Gsnps_rem_dup_hg37b.txt", sep = "\t", header = TRUE)
+Genotypedata_1000G <- hlaBED2Geno(bed.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.bed", 
+                                  fam.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.fam", 
+                                  bim.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.bim", assembly="hg19")
+hg38_converted_1000G_rem_dup_snps <- read.table("./data/Genotype_data/report_1000Gsnps_rem_dup_hg37b.txt", sep = "\t", header = TRUE)
 
 # hg37 -> hg38 conversion done using https://www.ncbi.nlm.nih.gov/genome/tools/remap
+hg38_converted_1000G_rem_dup_snps <- read.table("./data/Genotype_data/plink_SNP_data/report_1000Gsnps_rem_dup_hg37b.txt", sep = "\t", header = TRUE)
 Genotypedata_1000G$snp.position <- hg38_converted_1000G_rem_dup_snps$mapped_start
 Genotypedata_1000G$assembly <- 'hg38'
 

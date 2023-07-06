@@ -89,7 +89,7 @@ conf_table_plot_3 <- function(x, title=NA) {
               color= ifelse(x$goodbad=="absent", "white", "black"),
               position = position_dodge(width=0),
               size=5,
-              fontface="bold",
+              #fontface="bold",
               hjust=0.5,
               vjust=0.5) +
     scale_fill_manual(values = c(good = alpha("green", 0.5), bad = alpha("red", 0.4), absent="white")) +

@@ -50,12 +50,12 @@ geno_FIN_II$sample.id <- str_split_fixed(geno_FIN_II$sample.id, '-', 2)[, 1]
 
 # Load Plink genotype data and convert to hg38
 
-Genotypedata_1000G <- hlaBED2Geno(bed.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.bed", 
-                                  fam.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.fam", 
-                                  bim.fn = "data/Tienari/plink_SNP_data/chr6_phase3_MHC_rem_dup.bim", assembly="hg19") # used for model VII
+Genotypedata_1000G <- hlaBED2Geno(bed.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.bed", 
+                                  fam.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.fam", 
+                                  bim.fn = "data/Genotype_data/plink_SNP_data/chr6_phase3_MHC_rem_dup.bim", assembly="hg19") # used for model VII
 
 # hg37 -> hg38 conversion done using https://www.ncbi.nlm.nih.gov/genome/tools/remap
-hg38_converted_1000G_rem_dup_snps <- read.table("./data/Tienari/report_1000Gsnps_rem_dup_hg37b.txt", sep = "\t", header = TRUE)
+hg38_converted_1000G_rem_dup_snps <- read.table("./data/Genotype_data/report_1000Gsnps_rem_dup_hg37b.txt", sep = "\t", header = TRUE)
 Genotypedata_1000G$snp.position <- hg38_converted_1000G_rem_dup_snps$mapped_start
 Genotypedata_1000G$assembly <- 'hg38'
 
@@ -66,10 +66,10 @@ geno_comb_1000G_II <-hlaGenoCombine(Genotypedata_1000G, geno_FIN_II, match.type=
 ## PHENOTYPE data 1000G
 
 # read in 1000G phenotype data (all populations)
-pheno_1000G_MICA <- read_excel("./data/Tienari/1000G_results_all_processed_pop_info.xlsx", sheet = "MICA") %>% as.data.frame()
-pheno_1000G_MICB <- read_excel("./data/Tienari/1000G_results_all_processed_pop_info.xlsx", sheet = "MICB") %>% as.data.frame()
-pheno_1000G_E <- read_excel("./data/Tienari/1000G_results_all_processed_pop_info.xlsx", sheet = "HLA-E") %>% as.data.frame()
-pheno_1000G_F <- read_excel("./data/Tienari/1000G_results_all_processed_pop_info.xlsx", sheet = "HLA-F") %>% as.data.frame()
+pheno_1000G_MICA <- read_excel("./data/Phenotype_data/1000G_results_all_processed_pop_info.xlsx", sheet = "MICA") %>% as.data.frame()
+pheno_1000G_MICB <- read_excel("./data/Phenotype_data/1000G_results_all_processed_pop_info.xlsx", sheet = "MICB") %>% as.data.frame()
+pheno_1000G_E <- read_excel("./data/Phenotype_data/1000G_results_all_processed_pop_info.xlsx", sheet = "HLA-E") %>% as.data.frame()
+pheno_1000G_F <- read_excel("./data/Phenotype_data/1000G_results_all_processed_pop_info.xlsx", sheet = "HLA-F") %>% as.data.frame()
 
 # get samples that are in genotype data
 pheno_1000G_MICA_intersect <- filter(pheno_1000G_MICA, Sample_ID %in% Genotypedata_1000G$sample.id)
