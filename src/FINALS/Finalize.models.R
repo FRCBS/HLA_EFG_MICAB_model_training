@@ -18,7 +18,7 @@ library(HIBAG)
 
 # novels alleles only present in Finnish reference -> change allele names to models (i), (ii) and (iv) and (vi), here MICA and MICB model i as an example
 # mica
-model_mica_all <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_BB_mica_Histog.RData")))
+model_mica_all <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_FIN_I_mica_Histog.RData")))
 model_mica_all$hla.allele
 model_mica_all$hla.freq
 
@@ -30,14 +30,14 @@ model_mica_all$hla.allele
 model_mica_all$hla.freq
 
 model_mica_all <- hlaModelToObj(model_mica_all)
-save(model_mica_all, file="./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_BB_mica_Histog_final.RData")
-model_test <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_BB_mica_Histog_final.RData")))
+save(model_mica_all, file="./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_FIN_I_mica_Histog_final.RData")
+model_test <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_MICA_geno_FIN_I_mica_Histog_final.RData")))
 model_test$hla.allele
 model_test$hla.freq
 
 # micb
 
-model_micb_all <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICB_geno_BB_micb_Histog.RData")))
+model_micb_all <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICB_geno_FIN_I_micb_Histog.RData")))
 summary(model_micb_all)
 model_micb_all$hla.allele
 model_micb_all$hla.freq
@@ -52,8 +52,8 @@ model_micb_all$hla.allele
 model_micb_all$hla.freq
 
 model_micb_all <- hlaModelToObj(model_micb_all)
-save(model_micb_all, file="./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICA_geno_BB_mica_Histog_final.RData")
-model_test <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICB_geno_BB_micb_Histog_final.RData")))
+save(model_micb_all, file="./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICB_geno_FIN_I_micb_Histog_final.RData")
+model_test <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICB/model_MICB_geno_FIN_I_micb_Histog_final.RData")))
 model_test$hla.allele
 
 ##### ------------------------------------------------------------------------------------------------------------------------------------------- #####
@@ -61,7 +61,7 @@ model_test$hla.allele
 ### FINALIZE WITH HIBAG hlaPublish (delete sample IDs and unused SNPs and add change model name)
 
 
-model_to_finalize <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_mica_geno_BB_mica_Histog_final.RData")))
+model_to_finalize <- hlaModelFromObj(get(load("./data/Imputation_models/Combination_testing_models/All_data/MICA/model_mica_geno_FIN_I_mica_Histog_final.RData")))
 model_to_finalize$hla.allele
 model_to_finalize$hla.freq
 summary(model_to_finalize)
