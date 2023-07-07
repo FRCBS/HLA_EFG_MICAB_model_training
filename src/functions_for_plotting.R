@@ -23,9 +23,8 @@ accuracy_plot_facet <- function(i) {
           panel.grid.major.y=element_line(), 
           panel.grid.minor.y=element_line(),
           panel.background=element_rect(fill="white"), 
-          axis.text.x = element_text(hjust = 0.5, vjust = 1,size = 18, face="bold"),
-          plot.title = element_text(size = 24, hjust = 0, face = 'bold'),
-          axis.text.y = element_text(size = 18, face="bold"),
+          axis.text.x = element_text(hjust = 0.5, vjust = 1,size = 18, face='bold'),
+          axis.text.y = element_text(size = 18, face='bold'),
           axis.ticks = element_blank()) + 
     theme(strip.text.x = element_text(size = 20),
           strip.background = element_blank()) +
@@ -33,7 +32,6 @@ accuracy_plot_facet <- function(i) {
           legend.text = element_text(size=18),
           legend.title = element_text(size=20, margin = margin(0, 0, 9, 0))) +
     theme(legend.position = "bottom") +
-    theme(plot.title = element_text(hjust = 0, size=26)) +
     theme(legend.key.width= unit(1.5, 'cm'))
 } 
 
