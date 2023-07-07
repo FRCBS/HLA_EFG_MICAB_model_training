@@ -241,7 +241,7 @@ panel.2.FIN <- dat.confusion.FIN[[4]] / dat.confusion.hlaef.FIN #& theme(plot.ma
 
 conf_plot_FIN <- (panel.1.FIN + panel.2.FIN + plot_layout(widths=c(2,1)))
 
-ggsave(conf_plot_FIN, file = './results/Plots/Plot_5.jpeg', height = 14, width =20, dpi=600)
+ggsave(conf_plot_FIN, file = './results/Plots/Figure_5.jpeg', height = 14, width =20, dpi=600)
 
 
 
