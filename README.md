@@ -12,6 +12,4 @@ Training and validation of imputation reference panels for HLA-E, -F and -G and 
 
 `Validation.R` validation of models 
 
-`imputation.R` example of running imputation using models VI for MICA, MICB, HLA-E, HLA-F and models I for HLA-G, HLA-G 3'UTR and HLA-G 5'UTR
-
 `plot_results.R` plotting results
