@@ -12,7 +12,7 @@ library(parallel)
 library(readxl)
 library(openxlsx)
 
-source('./src/FINALS/functions.R')
+source('./src/functions.R')
 
 ### ................................................................................................................................................ ###
 

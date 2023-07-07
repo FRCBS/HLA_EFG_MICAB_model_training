@@ -16,7 +16,7 @@ library(ggpubr)
 library(flextable) 
 library(patchwork)
 
-source('./src/FINALS/functions_for_plotting.R')
+source('./src/functions_for_plotting.R')
 
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
 
@@ -54,7 +54,7 @@ overall.list.melt <- overall.list[,c(5, 9:11)] %>% melt(id=c("Model", "Gene", "P
 accuracy_plot_all_null <- accuracy_plot_facet(overall.list.melt)
 
 # save
-ggsave(accuracy_plot_all_null, file='./results/Plots/Manuscript/Figure_2_accuracy_plot_all_null.jpeg', height=7.5, width = 20, dpi=600)
+ggsave(accuracy_plot_all_null, file='./results/Plots/Figure_2.jpeg', height=7.5, width = 20, dpi=600)
 
 
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
@@ -136,7 +136,7 @@ confusion_plot <- ((panel.1 + panel.2 + plot_layout(widths = c(2.3, 1))) / panel
   theme(plot.tag = element_text(size = 40)) 
 
 # save 
-ggsave(confusion_plot, file="results/Plots/Manuscript/Figure_3_confusion_vi.jpeg", width=18, height=20, dpi = 600)
+ggsave(confusion_plot, file="results/Plots/Figure_3.jpeg", width=18, height=20, dpi = 600)
 
 
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
@@ -186,7 +186,7 @@ allele_freq_all <- (allele_accuracy_all + plot_spacer() +
         legend.box = 'horizontal', legend.box.just = 'left', 
         legend.margin = margin(1, 35, 20, 35)) 
 
-ggsave(allele_freq_all, file='./results/Plots/Manuscript/Figure_4_allelefreq_vs_acc_sens_spec.jpeg', 
+ggsave(allele_freq_all, file='./results/Plots/Manuscript/Figure_4.jpeg', 
        height = 14, width = 18)
 
 
@@ -241,7 +241,7 @@ panel.2.FIN <- dat.confusion.FIN[[4]] / dat.confusion.hlaef.FIN #& theme(plot.ma
 
 conf_plot_FIN <- (panel.1.FIN + panel.2.FIN + plot_layout(widths=c(2,1)))
 
-ggsave(conf_plot_FIN, file = './results/Plots/Manuscript/Plot_5_conf_FIN_all.jpeg', height = 14, width =20, dpi=600)
+ggsave(conf_plot_FIN, file = './results/Plots/Plot_5.jpeg', height = 14, width =20, dpi=600)
 
 
 
@@ -333,7 +333,7 @@ fl_plot_oob_test <- ggplot(acc_all, aes(x= kb_flanking, group=locus)) +
     theme(legend.position = c(0.7, 0.05)) +
     theme(axis.title=element_text(size=24))
 
-ggsave(fl_plot_oob_test, file='./results/Plots/Manuscript/Supplementary/SF_1_flanking_testings.jpeg', height=18, width = 20, dpi=600)
+ggsave(fl_plot_oob_test, file='./results/Plots/Supplementary/SF_1.jpeg', height=18, width = 20, dpi=600)
 
 
 # ************************************************************************************************************************************************** ###
@@ -456,7 +456,7 @@ Allele_plot
 model_properties_plot <- ( plot_train_oob + plot_alldata_oob + SNP_plot + Allele_plot + plot_layout(guides = 'collect') & theme(legend.position = 'bottom')) + 
   plot_annotation(tag_levels = 'A')  & theme(plot.tag = element_text(size = 22))
 
-ggsave(model_properties_plot, file='./results/Plots/Manuscript/Supplementary/SF_2_model_properties.jpeg', height=10, width = 16)
+ggsave(model_properties_plot, file='./results/Plots/Supplementary/SF_2.jpeg', height=10, width = 16)
 
 # **************************************************************************************************************************************************** #
 
@@ -493,7 +493,7 @@ overall.list.melt.nonnull <- overall.list.nonnull[,c(5, 9:11)] %>% melt(id=c("Mo
 accuracy_plot_all <- accuracy_plot_facet(overall.list.melt.nonnull)
 accuracy_plot_all
 
-ggsave(accuracy_plot_all, file = './results/Plots/Manuscript/Supplementary/SF_3_accuracy_all_nonnull.jpeg', height = 7.5, width =20, dpi=600)
+ggsave(accuracy_plot_all, file = './results/Plots/Supplementary/SF_3.jpeg', height = 7.5, width =20, dpi=600)
 
 # **************************************************************************************************************************************************** #
 
@@ -565,10 +565,4 @@ accuracy_delta <- ggplot(comb.overall.list, aes(factor(Pop, levels=c('FIN','EUR'
   theme(legend.key.width= unit(2, 'cm'))
 
 
-ggsave(accuracy_delta, file='./results/Plots/Manuscript/Supplementary/SF_4_overall_delta.jpeg', height=7.5, width = 20, dpi=600)
-
-
-# count min and mean delta
-#min(comb.overall.list$delta)
-#mean(comb.overall.list$delta)
-#comb.overall.list %>% filter(Gene == "MICA") %>% summarize_at("delta", mean)
+ggsave(accuracy_delta, file='./results/Plots/Supplementary/SF_4.jpeg', height=7.5, width = 20, dpi=600)
