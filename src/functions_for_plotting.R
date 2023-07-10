@@ -26,7 +26,7 @@ accuracy_plot_facet <- function(i) {
           axis.text.x = element_text(hjust = 0.5, vjust = 1,size = 18, face='bold'),
           axis.text.y = element_text(size = 18, face='bold'),
           axis.ticks = element_blank()) + 
-    theme(strip.text.x = element_text(size = 20),
+    theme(strip.text.x = element_text(size = 24),
           strip.background = element_blank()) +
     theme(legend.key.size = unit(1, 'cm'),
           legend.text = element_text(size=18),

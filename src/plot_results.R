@@ -54,7 +54,7 @@ overall.list.melt <- overall.list[,c(5, 9:11)] %>% melt(id=c("Model", "Gene", "P
 accuracy_plot_all_null <- accuracy_plot_facet(overall.list.melt)
 
 # save
-ggsave(accuracy_plot_all_null, file='./results/Plots/Figure_2.jpeg', height=7.5, width = 20, dpi=600)
+ggsave(accuracy_plot_all_null, file='./results/Plots/Figure_2.jpeg', height=7.5, width = 18, dpi=600)
 
 
 ### ------------------------------------------------------------------------------------------------------------------------------------------------ ###
@@ -493,7 +493,7 @@ overall.list.melt.nonnull <- overall.list.nonnull[,c(5, 9:11)] %>% melt(id=c("Mo
 accuracy_plot_all <- accuracy_plot_facet(overall.list.melt.nonnull)
 accuracy_plot_all
 
-ggsave(accuracy_plot_all, file = './results/Plots/Supplementary/SF_3.jpeg', height = 7.5, width =20, dpi=600)
+ggsave(accuracy_plot_all, file = './results/Plots/Supplementary/SF_3.jpeg', height = 7.5, width =18, dpi=600)
 
 # **************************************************************************************************************************************************** #
 
@@ -538,7 +538,7 @@ names(gene.names) <- c("MICA", "MICB", "HLA_E", "HLA_F")
 accuracy_delta <- ggplot(comb.overall.list, aes(factor(Pop, levels=c('FIN','EUR','AFR','EAS','SAS','AMR')), Model, fill=delta, group=Gene)) + 
   geom_tile(color = "black", show.legend = T, linewidth = .2) + 
   guides(colour = "none") +
-  geom_text(aes(label = round(delta, digits=3)), size=6) +
+  geom_text(aes(label = round(delta, digits=3)), size=5) +
   scale_fill_viridis_c(alpha=0.4) + 
   scale_y_discrete(limits=rev) +
   facet_wrap(vars(factor(Gene, levels=c("MICA", "MICB", "HLA_E", "HLA_F"))), ncol=4,
@@ -555,7 +555,7 @@ accuracy_delta <- ggplot(comb.overall.list, aes(factor(Pop, levels=c('FIN','EUR'
         plot.title = element_text(size = 26, hjust = 0, face = 'bold'),
         axis.text.y = element_text(size = 18, face="bold"),
         axis.ticks = element_blank()) + 
-  theme(strip.text.x = element_text(size = 20),
+  theme(strip.text.x = element_text(size = 24),
         strip.background = element_blank()) +
   theme(legend.key.size = unit(1, 'cm'),
         legend.text = element_text(size=18),
@@ -565,4 +565,4 @@ accuracy_delta <- ggplot(comb.overall.list, aes(factor(Pop, levels=c('FIN','EUR'
   theme(legend.key.width= unit(2, 'cm'))
 
 
-ggsave(accuracy_delta, file='./results/Plots/Supplementary/SF_4.jpeg', height=7.5, width = 20, dpi=600)
+ggsave(accuracy_delta, file='./results/Plots/Supplementary/SF_4.jpeg', height=7.5, width = 18, dpi=600)
