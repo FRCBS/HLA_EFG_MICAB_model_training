@@ -152,8 +152,8 @@ names(dat.nonnull) <- list.files('data/Output/Data_comb_test_results/BB_1000G/Co
   gsub('_all_models_1000G_BB_pred_compare', '', .)
 
 gene.names       <- names(dat.nonnull)
-model.names.pick <- c('ii', 'v', 'vi') # model 'ii' = FIN reference, model 'v' = 1000G reference, model 'vi' = combined reference
-# otan tässä vain nämä kolme mallia edustamaan referenssejä
+model.names.pick <- c('ii', 'v', 'vi') 
+# model 'ii' = FIN reference, model 'v' = 1000G reference, model 'vi' = combined reference
 pop.names        <- dat.nonnull[['HLA_E']][['i']] %>% names
 
 # get allelic results ($detail) for all genes and models
@@ -566,3 +566,92 @@ accuracy_delta <- ggplot(comb.overall.list, aes(factor(Pop, levels=c('FIN','EUR'
 
 
 ggsave(accuracy_delta, file='./results/Plots/Supplementary/SF_4.jpeg', height=7.5, width = 18, dpi=600)
+
+# **************************************************************************************************************************************************** #
+
+#         SUPPLEMENTARY FIGURE 5 (GSA and PMRA model accuracies)
+
+# **************************************************************************************************************************************************** #
+
+# import GSA validation results
+GSA_results <- fread("./data/Imputation_models/Combination_testing_models/Array_intersect/GSA/Training/Overall_acc_GSA_cv_all.txt")
+GSA_results$acc.haplo <- GSA_results$acc.haplo *100
+GSA_results_2 <- GSA_results %>% select(c(1:3)) %>% melt(id.vars = c("Gene", "Pop")) %>% filter(!Pop == 'ALL')
+
+# plot GSA training accuracies
+plot_GSA_acc <- ggplot(GSA_results_2, aes(width=0.8, x=factor(Gene, level=c('MICA', 'MICB', 'E', 'F', 'G', 'G_3UTR', 'G_5UTR')), y = value, fill = factor(Pop, level=c('EUR', 'AFR', 'EAS', 'SAS', 'AMR', 'FIN', 'ALL')))) +
+  geom_col(position=position_dodge2(0, preserve = "single", width=0.2)) +
+  geom_text(aes(label = round(value, digits = 1)), vjust = 0.5, hjust = -0.1, position = position_dodge(width = 0.9), size=5, angle = 90) +
+  ylab('Accuracy (%)') +
+  scale_fill_brewer(palette ='Paired') + 
+  coord_cartesian(ylim=c(90, 100.5)) +
+  theme_classic() +
+  theme(axis.text.x = element_text(size = 20, color='black'),
+        axis.text.y = element_text(size = 18, color='black')) +
+  theme(axis.ticks.x =  element_blank()) +
+  theme(legend.position="bottom") +
+  guides(fill=guide_legend(title= 'Population', nrow=1)) +
+  theme(plot.title = element_text(hjust = 0, size=22, face = 'bold')) +
+  theme(legend.key.size = unit(1, 'cm'),
+        legend.text = element_text(size=18),
+        legend.title = element_text(size=20)) +
+  theme(axis.title.y = element_text(size=18),
+        axis.title.x = element_blank())
+
+# import PMRA validation results
+PMRA_results <- fread("./data/Imputation_models/Combination_testing_models/Array_intersect/PMRA/Training/Overall_acc_PMRA_cv_all.txt")
+PMRA_results$acc.haplo <- PMRA_results$acc.haplo *100
+PMRA_results_2 <- PMRA_results %>% select(c(1:3)) %>% melt(id.vars = c("Gene", "Pop")) %>% filter(!Pop == 'ALL')
+
+# plot PMRA training accuracies
+plot_PMRA_acc <- ggplot(PMRA_results_2, aes(width=0.8, x=factor(Gene, level=c('MICA', 'MICB', 'E', 'F', 'G', 'G_3UTR', 'G_5UTR')), y = value, fill = factor(Pop, level=c('EUR', 'AFR', 'EAS', 'SAS', 'AMR', 'FIN', 'ALL')))) +
+  geom_col(position=position_dodge2(0, preserve = "single", padding=0, width= 0.2)) +
+  geom_text(aes(label = round(value, digits = 1)), vjust = 0.5, hjust = -0.1, position = position_dodge(width = 0.9), size=5, angle = 90) +
+  ylab('Accuracy (%)') +
+  scale_fill_brewer(palette ='Paired') + 
+  coord_cartesian(ylim=c(90, 100.5)) +
+  theme_classic() +
+  theme(axis.text.x = element_text(size = 20, color='black'),
+        axis.text.y = element_text(size = 18, color='black')) +
+  theme(axis.ticks.x =  element_blank()) +
+  theme(legend.position="bottom") +
+  guides(fill=guide_legend(title= 'Population', nrow = 1)) +
+  theme(plot.title = element_text(hjust = 0, size=22, face = 'bold')) +
+  theme(legend.key.size = unit(1, 'cm'),
+        legend.text = element_text(size=18),
+        legend.title = element_text(size=20)) +
+  theme(axis.title.y = element_text(size=18),
+        axis.title.x = element_blank())
+
+# combine GSA and PMRA plots
+array_acc_plot <- ((plot_GSA_acc + plot_PMRA_acc) +
+                     plot_layout(guides = "collect") +
+                     plot_annotation(tag_levels = list(c('A', 'B'))) &
+                     theme(legend.position = "bottom", plot.tag = element_text(size = 22)))  
+
+# save 
+#ggsave(array_acc_plot, file="results/Plots/Manuscript/Supplementary/SF_6_GSA_PMRA_model_acc.jpeg", width=18, height=8, dpi = 600)
+
+# add model prop tables to the plot
+
+# import GSA and PMRA model prop
+order <- c('MICA', 'MICB', 'HLA-E', 'HLA-F', 'HLA-G', 'HLA-G 3UTR', 'HLA-G 5UTR')
+GSA_prop <- fread("./data/Imputation_models/Combination_testing_models/Array_intersect/GSA/Training/Model_prop_GSA_cv_all.txt") %>% as.data.frame()
+GSA_prop <- GSA_prop[match(order, GSA_prop$Model), ] %>% 
+  mutate(OOB_train = round(GSA_prop$OOB_train, digits=1)) %>%
+  mutate(OOB_All_data = round(GSA_prop$OOB_All_data, digits=1))
+PMRA_prop <- fread("./data/Imputation_models/Combination_testing_models/Array_intersect/PMRA/Training/Model_prop_PMRA_cv_all.txt") %>% as.data.frame()
+PMRA_prop <- PMRA_prop[match(order, PMRA_prop$Model), ] %>% 
+  mutate(OOB_train = round(PMRA_prop$OOB_train, digits=1)) %>%
+  mutate(OOB_All_data = round(PMRA_prop$OOB_All_data, digits=1))
+
+t1 <- tableGrob(GSA_prop, rows = NULL, theme = ttheme_minimal(base_size = 13))
+t2 <- tableGrob(PMRA_prop, rows = NULL, theme = ttheme_minimal(base_size = 13))
+p1 <- ggarrange(plot_GSA_acc, plot_PMRA_acc, ncol=2, common.legend = TRUE, legend = 'top', labels = c("A", "B"))
+p2 <- ggarrange(t1, t2, ncol=2) 
+
+array_acc_plot_2 <- grid.arrange(arrangeGrob(p1,p2, ncol=1)) 
+
+# save 
+# ggsave(array_acc_plot_2, file="results/Plots/Manuscript/Supplementary/SF_6_GSA_PMRA_model_acc_2.jpeg", width=20, height=10, dpi = 600)
+
