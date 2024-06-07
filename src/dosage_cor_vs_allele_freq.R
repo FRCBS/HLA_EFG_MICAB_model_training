@@ -5,10 +5,11 @@
 # ************************************************************************************************** #
 library(tidyverse)
 library(data.table)
+library(patchwork)
 
 source("./src/FINALS/dosage_function.R")
 
-# read in imputation results
+# import imputation results
 # ***
 # vi
 results <- list.files('data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb', 'compare$', full.names = T) %>% map(readRDS)
@@ -24,18 +25,10 @@ names(results_g) <- list.files('data/Output/Data_comb_test_results/HLA_G/', 'com
 loci <- as.list(c('E', 'F', 'MICA', 'MICB')) # huom! check this!
 loci_g <- as.list(c('HLA_G_3UTR', 'HLA_G_5UTR', 'HLA_G')) # huom! check this!
 
-#sapply(1:length(results), function(x) {
-#  imputation2dosage(results[[x]][[x]], loci[[x]], paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb/dosage/', loci[[x]], "_dosage"))
-#}) # funktio hävittää alleeleja, mikä syynä? -> nyt tehty lokukset yksitellen
-
-# MICA done separately (because of '/' in '008:01/04' causes problems in dosage_function.R) 
-# by taking alleles from the model, dosage_function.R modified for this
-
-#model <- hlaModelFromObj(get(load("data/Imputation_models/Combination_testing_models/MICA/model_MICA_geno_comb_1000G_BB_mica_vi.RData")))
-#imputation2dosage(results[[3]][[3]], loci[[3]], model, paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb/dosage/test2/', loci[[3]], "_dosage"))
-
-#model_g <- hlaModelFromObj(get(load("data/Imputation_models/Combination_testing_models/HLA_G/model_G_geno_BB_hlagtab$training.RData")))
-#imputation2dosage(results_g[[3]], 'G', model_g, paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb/dosage/test2/', loci_g[[3]], "_dosage"))
+# convert imputation posterior probabilities to dosages
+sapply(1:length(results), function(x) {
+  imputation2dosage(results[[x]][[x]], loci[[x]], paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb/dosage/', loci[[x]], "_dosage"))
+}) 
 
 # import dosages 
 dosages <- list.files('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/1000G_all_superpop_comb/dosage/test2', 'raw$', full.names = T) %>% map(function(x) {
@@ -55,9 +48,10 @@ names(results_fin) <- list.files('data/Output/Data_comb_test_results/BB_1000G/Co
 loci <- as.list(c('E', 'F', 'MICA', 'MICB')) # huom! check this!
 names(results_fin) <- loci
 
-#sapply(1:length(results), function(x) {
-#  imputation2dosage(results[[x]], loci[[x]], paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/FIN_all/dosage/', loci[[x]], "_dosage"))
-#}) # funktio hävittää alleeleja, mikä syynä? -> nyt tehty lokukset yksitellen
+# convert imputation posterior probabilities to dosages
+sapply(1:length(results), function(x) {
+  imputation2dosage(results[[x]], loci[[x]], paste0('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/FIN_all/dosage/', loci[[x]], "_dosage"))
+}) 
 
 # import dosages 
 dosages_fin <- list.files('./data/Output/Data_comb_test_results/BB_1000G/Combined_BB_1000G/FIN_all/dosage', 'raw$', full.names = T) %>% map(function(x) {
@@ -66,7 +60,7 @@ dosages_fin <- list.files('./data/Output/Data_comb_test_results/BB_1000G/Combine
 # *****
 
 # saple.id:s beginning with a number have 'X' in front of them in dosages, remove that so that id:s  match
-# samalla poistetaan '<present>' alleelinimen perästä
+# and remove '<present>'
 for (i in 1:length(dosages)) {
   dos <- as.data.frame(dosages[[i]])
   for (row in 1:nrow(dos)) {
@@ -137,6 +131,7 @@ true_function_g <- function(df, locus) {
   return(res)
 }
 
+# apply function
 res_mica <- true_function(results, 'MICA')
 res_micb <- true_function(results, 'MICB')
 res_e <- true_function(results, 'HLA_E')
@@ -178,7 +173,7 @@ dos_res_e_fin <- inner_join(dos_e_fin, res_e_fin, by= c('IID' = 'sample.id')) %>
 dos_res_f_fin <- inner_join(dos_f_fin, res_f_fin, by= c('IID' = 'sample.id')) %>% 
   mutate(allele1 = paste0('F*', allele1)) %>% mutate(allele2 = paste0('F*', allele2))
 
-# function to get true dosages
+# function for true dosages
 dosage_calc <- function(df) {
   df <- df[, c(1, ncol(df)-1, ncol(df), 2:(ncol(df)-2))]
   for (row in 1:nrow(df)) {
@@ -192,6 +187,7 @@ dosage_calc <- function(df) {
   return(df[, c(1, 4:ncol(df))])
 }
 
+# apply function
 true_dos_mica <- dosage_calc(dos_res_mica)
 true_dos_micb <- dosage_calc(dos_res_micb)
 true_dos_e <- dosage_calc(dos_res_e)
@@ -217,11 +213,7 @@ cor_function <- function(df_imp, df_true) {
   return(df_cor)
 }
 
-# try this instead, doesn't work yet
-#df_cor_test <- data.frame()
-#df_cor_test[1, ] <- 
-#  apply(true_dos_e[-1], MARGIN = 2, FUN = cor, dos_e)
-
+# apply function
 cor_mica <- cor_function(dos_mica, true_dos_mica) %>% t() %>% as.data.frame() %>% 
   rownames_to_column() %>% `colnames<-`(c("allele", "cor"))
 cor_micb <- cor_function(dos_micb, true_dos_micb) %>% t() %>% as.data.frame() %>% 
@@ -248,7 +240,7 @@ cor_f_fin <- cor_function(dos_f_fin, true_dos_f_fin) %>% t() %>% as.data.frame()
   rownames_to_column() %>% `colnames<-`(c("allele", "cor"))
 
 
-# function to get allele frequencies
+# function for allele frequencies
 freq_function <- function(df_res, df_cor, locus, name) {
   # locus = name in results
   # gene_name = gene name to be removed from df_cor$allele
@@ -262,7 +254,6 @@ freq_function <- function(df_res, df_cor, locus, name) {
   return(df_cor)
 }
 
-# function to get allele frequencies
 freq_function_g <- function(df_res, df_cor, locus, name) {
   # locus = name in results
   # gene_name = gene name to be removed from df_cor$allele
@@ -276,12 +267,11 @@ freq_function_g <- function(df_res, df_cor, locus, name) {
   return(df_cor)
 }
 
+# apply function
 cor_mica <- freq_function(results, cor_mica, 'MICA', 'MICA') %>% mutate(locus = 'MICA')
 cor_micb <- freq_function(results, cor_micb, 'MICB', 'MICB') %>% mutate(locus = 'MICB')
 cor_e <- freq_function(results, cor_e, 'HLA_E', 'E') %>% mutate(locus = 'E')
 cor_f <- freq_function(results, cor_f, 'HLA_F', 'F') %>% mutate(locus = 'F')
-
-cor_all <- do.call("rbind", list(cor_mica, cor_micb, cor_e, cor_f))
 
 cor_g <- freq_function_g(results_g, cor_g, 'HLA_G', 'G') %>% mutate(locus = 'G')
 cor_g3UTR <- freq_function_g(results_g, cor_g3UTR, 'HLA_G_3UTR', 'G') %>% mutate(locus = 'G_3UTR') 
@@ -289,18 +279,19 @@ cor_g3UTR$allele <- str_replace_all(cor_g3UTR$allele, fixed('G*UTR'), 'G_3UTR_')
 cor_g5UTR <- freq_function_g(results_g, cor_g5UTR, 'HLA_G_5UTR', 'G') %>% mutate(locus = 'G_5UTR')
 cor_g5UTR$allele <- str_replace_all(cor_g5UTR$allele, fixed('G*'), 'G_5UTR_')
 
-cor_all_g <- do.call("rbind", list(cor_g, cor_g3UTR, cor_g5UTR))
-
 cor_mica_fin <- freq_function_g(results_fin, cor_mica_fin, 'MICA', 'MICA') %>% mutate(locus = 'MICA')
 cor_micb_fin <- freq_function_g(results_fin, cor_micb_fin, 'MICB', 'MICB') %>% mutate(locus = 'MICB')
 cor_e_fin <- freq_function_g(results_fin, cor_e_fin, 'E', 'E') %>% mutate(locus = 'E')
 cor_f_fin <- freq_function_g(results_fin, cor_f_fin, 'F', 'F') %>% mutate(locus = 'F')
 
+# combine all
+cor_all <- do.call("rbind", list(cor_mica, cor_micb, cor_e, cor_f))
+cor_all_g <- do.call("rbind", list(cor_g, cor_g3UTR, cor_g5UTR))
 cor_all_fin <- do.call("rbind", list(cor_mica_fin, cor_micb_fin, cor_e_fin, cor_f_fin))
 
+# plot correlation vs allele frequency
 cor_vs_freq <- ggplot(cor_all, aes(x=freq, y=cor, color=locus, label=allele)) +
   geom_point(size=4) +
-  #ylab(bquote(dos_r^2)) +
   ylab('Dosage r') +
   xlab('Allele frequency') +
   theme_classic() +
@@ -325,7 +316,6 @@ cor_vs_freq_g <- ggplot(cor_all_g, aes(x=freq, y=cor, color=locus, label = allel
 
 cor_vs_freq_fin <- ggplot(cor_all_fin, aes(x=freq, y=cor, color=locus, label=allele)) +
   geom_point(size=4) +
-  #ylab(bquote(dos_r^2)) +
   ylab('Dosage r') +
   xlab('Allele frequency') +
   theme_classic() +
@@ -335,16 +325,11 @@ cor_vs_freq_fin <- ggplot(cor_all_fin, aes(x=freq, y=cor, color=locus, label=all
   theme(legend.position = c(0.9, 0.2)) +
   geom_text(aes(label=ifelse(cor<0.75, as.character(allele), '')), hjust=-0.2, vjust=0.4, size = 7, fontface= 'bold') 
 
-
-library(patchwork)
-
 dos_cor_plot <- ((cor_vs_freq + cor_vs_freq_g + cor_vs_freq_fin + 
-  #plot_layout(widths = c(5, 5, 5), heights = c(5, 5, 5))) + 
   plot_layout(axis_titles = "collect") +
   plot_annotation(tag_levels = list(c('A', 'B', 'C'))) & 
   theme(plot.tag = element_text(size = 22))))
   
-
 # save 
 ggsave(dos_cor_plot, file="results/Plots/Manuscript/Supplementary/SF_5_dosage_correlation.jpeg", width=18, height=6, dpi = 600)
 
