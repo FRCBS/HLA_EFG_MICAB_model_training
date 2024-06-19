@@ -1,6 +1,6 @@
-# HLA-E, HLA-F, HLA-G, MICA and MICB imputation reference panels
+# HLA-E, HLA-F, HLA-G, MICA and MICB HIBAG imputation reference panels
 
-Training and validation of imputation reference panels for HLA-E, -F and -G and MICA/B using Finnish and 1000G reference data
+Training and validation of HIBAG imputation reference panels for HLA-E, -F and -G and MICA/B using Finnish and 1000G reference data
 
 ## code (./src)
 
