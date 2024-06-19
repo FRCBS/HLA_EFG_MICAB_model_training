@@ -15,3 +15,7 @@ Training and validation of imputation reference panels for HLA-E, -F and -G and 
 `Array_intersect_model_training.R` fitting and validation of models for GSA and PMRA SNP content
 
 `plot_results.R` plotting results
+
+`plot_dosage_cor_vs_allele_freq.R` plotting Supplementary Figure 5
+
+`supplementary_confusions.R`plotting Supplementary confusion matrices
